@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 @Getter
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "campaign_type", discriminatorType = DiscriminatorType.STRING)
 public abstract class Campaign extends BaseEntity {
 
     @Column

@@ -1,6 +1,7 @@
 package com.muggedbits.rewardz.campaign.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -12,10 +13,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DiscriminatorValue("STAMP_CARD")
 public class StampsCampaign extends Campaign {
 
     @Column(nullable = false)
-    private int visitsRequired;
+    private Integer visitsRequired;
 
     @Column
     private String rewardDescription;

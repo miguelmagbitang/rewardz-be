@@ -1,6 +1,7 @@
 package com.muggedbits.rewardz.campaign.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -12,11 +13,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@DiscriminatorValue("REWARD_POINTS")
 public class PointsCampaign extends Campaign {
 
     @Column(nullable = false)
-    private int pointsPerPurchase;
+    private Integer pointsPerPurchase;
 
     @Column
-    private int redeemThreshold;
+    private Integer redeemThreshold;
 }
