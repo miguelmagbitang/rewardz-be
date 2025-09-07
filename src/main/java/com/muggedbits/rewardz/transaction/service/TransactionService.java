@@ -1,6 +1,9 @@
 package com.muggedbits.rewardz.transaction.service;
 
 import com.muggedbits.rewardz.campaign.model.Campaign;
+import com.muggedbits.rewardz.campaign.model.PointsCampaign;
+import com.muggedbits.rewardz.campaign.model.StampsCampaign;
+import com.muggedbits.rewardz.campaign.service.CampaignProgressService;
 import com.muggedbits.rewardz.campaign.service.CampaignService;
 import com.muggedbits.rewardz.security.service.CustomUserDetailsService;
 import com.muggedbits.rewardz.transaction.model.Transaction;
@@ -20,6 +23,7 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final CampaignService campaignService;
     private final CustomUserDetailsService userDetailsService;
+    private final CampaignProgressService campaignProgressService;
 
     public Transaction create(TransactionRequestDto transactionRequestDto) {
         Campaign campaign = campaignService.getCampaignById(transactionRequestDto.getCampaignId())
@@ -36,6 +40,13 @@ public class TransactionService {
                 .notes(transactionRequestDto.getNotes())
                 .tenantId(transactionRequestDto.getTenantId())
                 .build();
+        int delta = 0;
+        if (campaign instanceof PointsCampaign pointsCampaign) {
+            delta = transactionRequestDto.getAmountSpent() / pointsCampaign.getPointsPerPurchase();
+        } else if (campaign instanceof StampsCampaign stampsCampaign) {
+            delta = 1;
+        }
+        campaignProgressService.incrementProgress(user.getId(), campaign.getId(), delta);
         return transactionRepository.save(transaction);
     }
 
