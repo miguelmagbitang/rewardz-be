@@ -31,17 +31,7 @@ public class CampaignProgressService {
         } else {
             userCampaignProgress = progress.get();
         }
-        Campaign campaign = userCampaignProgress.getCampaign();
         userCampaignProgress.setProgressValue(userCampaignProgress.getProgressValue() + delta);
-        if (campaign instanceof PointsCampaign pointsCampaign) {
-            if (pointsCampaign.getRedeemThreshold() <= userCampaignProgress.getProgressValue()) {
-                userCampaignProgress.setRewardEarned(true);
-            }
-        } else if (campaign instanceof StampsCampaign stampsCampaign) {
-            if (stampsCampaign.getVisitsRequired() <= userCampaignProgress.getProgressValue()) {
-                userCampaignProgress.setRewardEarned(true);
-            }
-        }
         return progressRepository.save(userCampaignProgress);
     }
 }

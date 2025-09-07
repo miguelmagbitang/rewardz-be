@@ -24,6 +24,4 @@ public class UserCampaignProgress extends BaseEntity {
     @Column(nullable = false)
     private Integer progressValue = 0;
 
-    @Column(nullable = false)
-    private Boolean rewardEarned = false;
 }
