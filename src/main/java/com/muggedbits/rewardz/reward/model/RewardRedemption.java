@@ -1,18 +1,20 @@
-package com.muggedbits.rewardz.campaign.model;
+package com.muggedbits.rewardz.reward.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.muggedbits.rewardz.shared.BaseEntity;
-import com.muggedbits.rewardz.shared.CampaignType;
 import com.muggedbits.rewardz.user.model.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "user_campaign_progress")
+@Table(name = "reward_redemptions")
 @Setter
 @Getter
-public class UserCampaignProgress extends BaseEntity {
+public class RewardRedemption extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -20,11 +22,16 @@ public class UserCampaignProgress extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id", nullable = false)
+    @JoinColumn(name = "reward_id", nullable = false)
     @JsonIgnore
-    private Campaign campaign;
+    private Reward reward;
 
     @Column(nullable = false)
-    private Integer progressValue = 0;
+    private LocalDateTime redeemedAt;
 
+    @Column(nullable = false)
+    private String status;
+
+    @Column
+    private String notes;
 }

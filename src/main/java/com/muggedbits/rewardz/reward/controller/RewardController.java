@@ -1,7 +1,10 @@
 package com.muggedbits.rewardz.reward.controller;
 
+import com.muggedbits.rewardz.reward.model.RedemptionRequestDto;
 import com.muggedbits.rewardz.reward.model.Reward;
 import com.muggedbits.rewardz.reward.model.RewardDto;
+import com.muggedbits.rewardz.reward.model.RewardRedemption;
+import com.muggedbits.rewardz.reward.service.RewardRedemptionService;
 import com.muggedbits.rewardz.reward.service.RewardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +18,7 @@ import java.util.List;
 public class RewardController {
 
     private final RewardService rewardService;
+    private final RewardRedemptionService redemptionService;
 
     @PostMapping
     public ResponseEntity<Reward> createReward(@RequestBody RewardDto reward) {
@@ -44,5 +48,12 @@ public class RewardController {
     public ResponseEntity<Void> deleteReward(@PathVariable Long id) {
         rewardService.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{rewardId}/redeem")
+    public ResponseEntity<Boolean> redeemReward(@PathVariable Long rewardId,
+                                                @RequestBody RedemptionRequestDto redemptiontionDto) {
+        var result = redemptionService.redeem(redemptiontionDto.userId(), rewardId);
+        return ResponseEntity.ok(result);
     }
 }
