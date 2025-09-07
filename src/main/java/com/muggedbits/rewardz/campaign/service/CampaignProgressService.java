@@ -20,6 +20,10 @@ public class CampaignProgressService {
     private final CampaignRepository campaignRepository;
     private final EntityManager entityManager;
 
+    public UserCampaignProgress get(Long userId, Long campaignId) {
+        return progressRepository.findByUserIdAndCampaignId(userId, campaignId).orElseThrow(() -> new RuntimeException(("Not Found")));
+    }
+
     @Transactional
     public UserCampaignProgress incrementProgress(Long userId, Long campaignId, int delta) {
         var progress = progressRepository.findByUserIdAndCampaignId(userId, campaignId);
