@@ -17,8 +17,6 @@ import lombok.*;
 public class StampsCampaign extends Campaign {
 
     @Column(nullable = false)
-    private Integer visitsRequired;
+    private Integer limitCount;
 
-    @Column
-    private String rewardDescription;
 }
