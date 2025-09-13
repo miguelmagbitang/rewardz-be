@@ -5,11 +5,13 @@ import com.muggedbits.rewardz.campaign.model.CampaignRequestDto;
 import com.muggedbits.rewardz.campaign.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,9 +36,26 @@ public class CampaignController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCampaign);
     }
 
-    @GetMapping("/{campaignId}")
-    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long campaignId) {
-        Optional<Campaign> campaign = campaignService.getCampaignById(campaignId);
+    @GetMapping("/{id}")
+    public ResponseEntity<Campaign> getCampaignById(@PathVariable Long id) {
+        Optional<Campaign> campaign = campaignService.getCampaignById(id);
         return campaign.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Void> updateCampaign(@PathVariable Long id,
+                                               @RequestBody Map<String, Boolean> body) {
+        Boolean activate = body.get("activate");
+        if (activate == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        campaignService.activateOrDeactivate(id, activate);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCampaign(@PathVariable Long id) {
+        campaignService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

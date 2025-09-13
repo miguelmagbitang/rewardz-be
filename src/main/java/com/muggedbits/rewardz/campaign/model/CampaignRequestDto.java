@@ -1,22 +1,19 @@
 package com.muggedbits.rewardz.campaign.model;
 
 import com.muggedbits.rewardz.shared.CampaignType;
-import lombok.Data;
 
 import java.util.UUID;
 
-@Data
-public class CampaignRequestDto {
-    private String name;
-    private String description;
-    private String startDate = null;
-    private String endDate = null;
-    private UUID tenantId;
-    private CampaignType campaignType;
+public record CampaignRequestDto(
+        String name,
+        String description,
+        String startDate,
+        String endDate,
+        UUID tenantId,
+        CampaignType campaignType,
+        Integer pointsPerPurchase,
+        Integer redeemThreshold,
+        Integer stampLimit
+) {
 
-    private Integer pointsPerPurchase ;
-    private Integer redeemThreshold;
-
-    private Integer visitsRequired;
-    private String rewardDescription;
 }
