@@ -1,7 +1,6 @@
 package com.muggedbits.rewardz.campaign.model;
 
 import com.muggedbits.rewardz.shared.BaseEntity;
-import com.muggedbits.rewardz.shared.CampaignType;
 import jakarta.persistence.*;
 import lombok.*;
 

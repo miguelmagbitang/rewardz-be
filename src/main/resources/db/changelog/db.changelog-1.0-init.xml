@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
+
+    <!-- ========================= -->
+    <!-- CAMPAIGNS (BASE + CHILD) -->
+    <!-- ========================= -->
+    <changeSet id="1" author="migs">
+        <createTable tableName="campaigns">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="start_date" type="TIMESTAMP"/>
+            <column name="end_date" type="TIMESTAMP"/>
+            <column name="is_active" type="BOOLEAN"/>
+            <column name="tenant_id" type="UUID"/>
+            <column name="campaign_type" type="VARCHAR(50)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="migs">
+        <createTable tableName="campaigns_points">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"
+                             referencedTableName="campaigns"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_points_campaign"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="points_per_purchase" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="redeem_threshold" type="INT"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="3" author="migs">
+        <createTable tableName="campaigns_stamps">
+            <column name="id" type="BIGINT">
+                <constraints primaryKey="true" nullable="false"
+                             referencedTableName="campaigns"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_stamps_campaign"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="limit_count" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- ========================= -->
+    <!-- USERS -->
+    <!-- ========================= -->
+    <changeSet id="4" author="migs">
+        <createTable tableName="users">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="email" type="VARCHAR(255)"/>
+            <column name="password" type="VARCHAR(255)"/>
+            <column name="first_name" type="VARCHAR(255)"/>
+            <column name="last_name" type="VARCHAR(255)"/>
+            <column name="role" type="VARCHAR(50)"/>
+            <column name="tenant_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========================= -->
+    <!-- USER CAMPAIGN PROGRESS -->
+    <!-- ========================= -->
+    <changeSet id="5" author="migs">
+        <createTable tableName="user_campaign_progress">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_ucp_user"/>
+            </column>
+            <column name="campaign_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="campaigns"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_ucp_campaign"/>
+            </column>
+            <column name="progress_value" type="INT" defaultValueNumeric="0"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========================= -->
+    <!-- REWARDS -->
+    <!-- ========================= -->
+    <changeSet id="6" author="migs">
+        <createTable tableName="rewards">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="campaign_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="campaigns"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_rewards_campaign"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="description" type="VARCHAR(255)"/>
+            <column name="required_points" type="INT"/>
+            <column name="required_stamps" type="INT"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========================= -->
+    <!-- REWARD REDEMPTIONS -->
+    <!-- ========================= -->
+    <changeSet id="7" author="migs">
+        <createTable tableName="reward_redemptions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_redemptions_user"/>
+            </column>
+            <column name="reward_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="rewards"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_redemptions_reward"/>
+            </column>
+            <column name="redeemed_at" type="TIMESTAMP"/>
+            <column name="status" type="VARCHAR(50)"/>
+            <column name="notes" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========================= -->
+    <!-- TENANTS -->
+    <!-- ========================= -->
+    <changeSet id="8" author="migs">
+        <createTable tableName="tenants">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_email" type="VARCHAR(255)"/>
+            <column name="contact_phone" type="VARCHAR(50)"/>
+            <column name="is_active" type="BOOLEAN"/>
+            <column name="plan_type" type="VARCHAR(50)"/>
+            <column name="tenant_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+    <!-- ========================= -->
+    <!-- TRANSACTIONS -->
+    <!-- ========================= -->
+    <changeSet id="9" author="migs">
+        <createTable tableName="transactions">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP"/>
+            <column name="campaign_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="campaigns"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_transactions_campaign"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"
+                             referencedTableName="users"
+                             referencedColumnNames="id"
+                             foreignKeyName="fk_transactions_user"/>
+            </column>
+            <column name="amount_spent" type="INT"/>
+            <column name="transaction_date" type="TIMESTAMP"/>
+            <column name="notes" type="VARCHAR(255)"/>
+            <column name="tenant_id" type="UUID"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>
